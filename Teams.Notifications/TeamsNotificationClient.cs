@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,26 +8,20 @@ namespace Teams.Notifications
 {
     public class TeamsNotificationClient : IDisposable
     {
-        private readonly Uri uri;
-        private readonly HttpClient client = new HttpClient();
+        private readonly Uri _uri;
+        private readonly HttpClient _client = new();
 
-        public TeamsNotificationClient(string url)
+        public TeamsNotificationClient(string url) => _uri = new Uri(url);
+
+        public async Task PostMessageAsync(MessageCard message)
         {
-            uri = new Uri(url);
-        }
+            string json = JsonConvert.SerializeObject(message);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        public async Task PostMessage(MessageCard message)
-        {
-            var json = JsonConvert.SerializeObject(message);
-
-            var response = await this.client.PostAsync(this.uri,
-                new StringContent(json, Encoding.UTF8, "application/json"));
+            var response = await _client.PostAsync(_uri, content).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
         }
 
-        public void Dispose()
-        {
-            this.client?.Dispose();
-        }
+        public void Dispose() => _client.Dispose();
     }
 }

@@ -1,28 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace Teams.Notifications
 {
     public class PotentialActionLink
     {
-        private string name;
-
         [JsonProperty("os")]
-        public string Type
-        {
-            get
-            {
-                return this.name ?? "default";
-            }
-            set
-            {
-                this.name = value;
-            }
-        }
+        public string Type { get; set; } = "default";
 
         [JsonProperty("uri")]
-        public string Value { get; set; }
+        public string? Value { get; set; }
     }
 }

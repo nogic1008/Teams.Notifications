@@ -1,46 +1,51 @@
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Teams.Notifications.Client
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private async static Task Main()
         {
-            var url = "";
+            const string url = "";
             var client = new TeamsNotificationClient(url);
 
-            var message = new MessageCard();
-            message.Title = "title";
-            message.Text = "text";
-            message.Color = "f0ad4e";
-            message.Sections = new List<MessageSection>();
-            message.Sections.Add(new MessageSection()
+            var message = new MessageCard
             {
-                Title = "Context",
-                Facts = new List<MessageFact>()
+                Title = "title",
+                Text = "text",
+                Color = "f0ad4e",
+                Sections = new List<MessageSection>
                 {
-                    new MessageFact()
+                    new MessageSection()
                     {
-                        Name = "Key",
-                        Value = "Value"
+                        Title = "Context",
+                        Facts = new List<MessageFact>()
+                        {
+                            new MessageFact()
+                            {
+                                Name = "Key",
+                                Value = "Value"
+                            }
+                        }
+                    }
+                },
+                PotentialActions = new List<PotentialAction>
+                {
+                    new PotentialAction()
+                    {
+                        Name = "Open",
+                        Targets = new List<PotentialActionLink>()
+                        {
+                            new PotentialActionLink()
+                            {
+                                Value = "http://google.com"
+                            }
+                        }
                     }
                 }
-            });
-            message.PotentialActions = new List<PotentialAction>();
-            message.PotentialActions.Add(new PotentialAction()
-            {
-                Name = "Open",
-                Targets = new List<PotentialActionLink>()
-                {
-                    new PotentialActionLink()
-                    {
-                        Value = "http://google.com"
-                    }
-                }
-            });
-            client.PostMessage(message).GetAwaiter().GetResult();
-
+            };
+            await client.PostMessageAsync(message).ConfigureAwait(false);
         }
     }
 }

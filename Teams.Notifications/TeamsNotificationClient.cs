@@ -1,14 +1,14 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Teams.Notifications
 {
-    public class TeamsNotificationClient: IDisposable
+    public class TeamsNotificationClient : IDisposable
     {
         private readonly Uri uri;
         private readonly HttpClient client = new HttpClient();

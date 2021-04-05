@@ -5,7 +5,7 @@ namespace Teams.Notifications
 {
     public class PotentialAction
     {
-        public PotentialAction() : this("") {}
+        public PotentialAction() : this("") { }
 
         public PotentialAction(string name) => Name = name;
 

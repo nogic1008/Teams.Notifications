@@ -8,9 +8,14 @@ namespace Teams.Notifications
     public class TeamsNotificationClient : IDisposable
     {
         private readonly Uri _uri;
-        private readonly HttpClient _client = new();
+        private readonly HttpClient _client;
 
-        public TeamsNotificationClient(string url) => _uri = new Uri(url);
+        public TeamsNotificationClient(string uri) : this(new(uri), new()) { }
+
+        public TeamsNotificationClient(Uri uri) : this(uri, new()) { }
+
+        public TeamsNotificationClient(Uri uri, HttpClient client)
+            => (_uri, _client) = (uri ?? throw new ArgumentNullException(nameof(uri)), client ?? throw new ArgumentNullException(nameof(client)));
 
         public async ValueTask PostMessageAsync(MessageCard message)
         {

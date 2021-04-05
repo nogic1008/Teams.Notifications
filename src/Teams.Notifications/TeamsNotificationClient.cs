@@ -1,8 +1,7 @@
 using System;
 using System.Net.Http;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Teams.Notifications
 {
@@ -13,10 +12,11 @@ namespace Teams.Notifications
 
         public TeamsNotificationClient(string url) => _uri = new Uri(url);
 
-        public async Task PostMessageAsync(MessageCard message)
+        public async ValueTask PostMessageAsync(MessageCard message)
         {
-            string json = JsonConvert.SerializeObject(message);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            byte[] utf8json = JsonSerializer.SerializeToUtf8Bytes(message);
+            var content = new ByteArrayContent(utf8json);
+            content.Headers.ContentType = new("application/json");
 
             var response = await _client.PostAsync(_uri, content).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Teams.Notifications.Entities;
 
 namespace Teams.Notifications.Client
 {

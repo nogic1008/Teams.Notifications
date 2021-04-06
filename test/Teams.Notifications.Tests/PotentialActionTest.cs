@@ -1,4 +1,5 @@
 using Xunit;
+using Teams.Notifications.Entities;
 
 namespace Teams.Notifications.Tests
 {

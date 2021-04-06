@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Teams.Notifications
+namespace Teams.Notifications.Entities
 {
     public class MessageFact
     {

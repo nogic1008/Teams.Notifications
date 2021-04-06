@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Teams.Notifications
+namespace Teams.Notifications.Entities
 {
     public class MessageSection
     {

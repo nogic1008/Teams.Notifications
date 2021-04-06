@@ -8,7 +8,7 @@ namespace Teams.Notifications.Entities
         [property: JsonPropertyName("text")] string? Text,
         [property: JsonPropertyName("themeColor")] string? ThemeColor,
         [property: JsonPropertyName("sections")] IList<MessageSection>? Sections,
-        [property: JsonPropertyName("potentialAction")] IList<OpenApiAction>? PotentialActions
+        [property: JsonPropertyName("potentialAction")] IList<OpenUriAction>? PotentialActions
     )
     {
         [JsonPropertyName("@type")]

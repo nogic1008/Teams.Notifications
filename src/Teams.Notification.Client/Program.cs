@@ -25,11 +25,11 @@ namespace Teams.Notifications.Client
                         }
                     )
                 },
-                PotentialActions: new List<OpenApiAction>
+                PotentialActions: new List<OpenUriAction>
                 {
                     new (
                         Name: "Open",
-                        Targets: new List<OpenApiTarget>
+                        Targets: new List<OpenUriTarget>
                         {
                             new ("http://google.com")
                         }

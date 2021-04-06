@@ -4,11 +4,11 @@ using System.Text.Json.Serialization;
 namespace Teams.Notifications.Entities
 {
     public record MessageCard(
-        [property: JsonPropertyName("title")] string? Title,
-        [property: JsonPropertyName("text")] string? Text,
-        [property: JsonPropertyName("themeColor")] string? ThemeColor,
-        [property: JsonPropertyName("sections")] IList<MessageSection>? Sections,
-        [property: JsonPropertyName("potentialAction")] IList<OpenUriAction>? PotentialActions
+        [property: JsonPropertyName("title")] string? Title = null,
+        [property: JsonPropertyName("text")] string? Text = null,
+        [property: JsonPropertyName("themeColor")] string? ThemeColor = null,
+        [property: JsonPropertyName("sections")] IList<MessageSection>? Sections = null,
+        [property: JsonPropertyName("potentialAction")] IList<OpenUriAction>? PotentialActions = null
     )
     {
         [JsonPropertyName("@type")]

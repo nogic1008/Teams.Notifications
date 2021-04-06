@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 using FluentAssertions;
 using Teams.Notifications.Entities;
@@ -10,74 +11,67 @@ namespace Teams.Notifications.Tests.Entities
     /// </summary>
     public class OpenUriActionTest
     {
+        private const string Type = "\"@type\":\"OpenUri\"";
+
         [Fact]
-        public void CanSerializeJSON()
+        public void CanSerializeJson()
         {
             // Arrange
             const string name = "Name";
             var targets = new[]
             {
-                new OpenUriTarget("default", "http://example.com/"),
+                new OpenUriTarget("http://example.com/", "default"),
             };
             var sut = new OpenUriAction(name, targets);
 
             // Act
             string json = JsonSerializer.Serialize(sut, JsonConfig.Default);
-            string targetJson = JsonSerializer.Serialize(targets[0], JsonConfig.Default);
 
             // Assert
-            json.Should().Contain("\"@type\":\"OpenUri\"")
+            json.Should().Contain(Type)
                 .And.Contain("\"name\":\"" + name + "\"")
-                .And.Contain($"\"targets\":[{targetJson}]");
+                .And.Contain("\"targets\":[{\"uri\":\"http://example.com/\",\"os\":\"default\"}]");
         }
 
-        [Fact]
-        public void CanDeserializeJSON()
-        {
-            const string jsonFormat = "{{\"@type\":\"OpenApi\",\"name\":\"{0}\",\"targets\":[{1}]}}";
-
-            // EmptyTargets
+        /// <summary>
+        /// Test data for <see cref="CanDeserializeJson(string, OpenUriAction)"/>
+        /// </summary>
+        public static object[][] TestData => new[] {
+            new object[]
             {
-                const string name = "EmptyTargets";
-                string json = string.Format(jsonFormat, name, "");
-
-                var sut = JsonSerializer.Deserialize<OpenUriAction>(json);
-
-                sut.Should().NotBeNull();
-                sut!.Name.Should().Be(name);
-                sut.Targets.Should().BeEmpty();
-            }
-
-            // SingleTargets
+                "{" + Type + ",\"name\":\"Empty\",\"targets\":[]}",
+                new OpenUriAction("Empty", Array.Empty<OpenUriTarget>())
+            },
+            new object[]
             {
-                const string name = "SingleTargets";
-                string json = string.Format(jsonFormat, name, "{\"os\":\"default\",\"uri\":\"http://example.com/\"}");
-
-                var sut = JsonSerializer.Deserialize<OpenUriAction>(json);
-
-                sut.Should().NotBeNull();
-                sut!.Name.Should().Be(name);
-                sut.Targets.Should().HaveCount(1)
-                    .And.Contain(new OpenUriTarget("http://example.com/", "default"));
-            }
-
-            // MultipleTargets
+                "{" + Type + ",\"name\":\"Single\",\"targets\":[{\"os\":\"default\",\"uri\":\"http://example.com/\"}]}",
+                new OpenUriAction("Single", new[] { new OpenUriTarget("http://example.com/", "default") })
+            },
+            new object[]
             {
-                const string name = "MultipleTargets";
-                string json = string.Format(jsonFormat, name,
-                "{\"os\":\"default\",\"uri\":\"http://example.com/\"},"
+                "{" + Type + ",\"name\":\"Multiple\",\"targets\":["
+                    + "{\"os\":\"default\",\"uri\":\"http://example.com/\"},"
                     + "{\"os\":\"iOS\",\"uri\":\"http://example.com/ios/\"},"
-                    + "{\"os\":\"android\",\"uri\":\"http://example.com/android/\"}");
+                    + "{\"os\":\"android\",\"uri\":\"http://example.com/android/\"}"+ "]}",
+                new OpenUriAction("Multiple", new OpenUriTarget[]
+                {
+                    new("http://example.com/", "default"),
+                    new("http://example.com/ios/", "iOS"),
+                    new("http://example.com/android/", "android"),
+                })
+            },
+        };
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public void CanDeserializeJson(string json, OpenUriAction expected)
+        {
+            // Arrange - Act
+            var action = JsonSerializer.Deserialize<OpenUriAction>(json);
 
-                var sut = JsonSerializer.Deserialize<OpenUriAction>(json);
-
-                sut.Should().NotBeNull();
-                sut!.Name.Should().Be(name);
-                sut.Targets.Should().HaveCount(3)
-                    .And.Contain(new OpenUriTarget("http://example.com/", "default"))
-                    .And.Contain(new OpenUriTarget("http://example.com/ios/", "iOS"))
-                    .And.Contain(new OpenUriTarget("http://example.com/android/", "android"));
-            }
+            // Assert
+            action!.Type.Should().Be(expected.Type);
+            action.Name.Should().Be(expected.Name);
+            action.Targets.Should().ContainInOrder(expected.Targets);
         }
     }
 }

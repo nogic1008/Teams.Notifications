@@ -7,4 +7,8 @@ namespace Teams.Notifications.Entities
         [property: JsonPropertyName("title")] string? Title = null,
         [property: JsonPropertyName("facts")] IList<MessageFact>? Facts = null
     );
+    public record MessageFact(
+        [property: JsonPropertyName("name")] string? Name,
+        [property: JsonPropertyName("value")] string? Value
+    );
 }

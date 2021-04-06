@@ -11,4 +11,9 @@ namespace Teams.Notifications.Entities
         [JsonPropertyName("@type")]
         public string Type => "OpenUri";
     }
+
+    public record OpenUriTarget(
+        [property: JsonPropertyName("uri")] string Uri,
+        [property: JsonPropertyName("os")] string OS = "default"
+    );
 }

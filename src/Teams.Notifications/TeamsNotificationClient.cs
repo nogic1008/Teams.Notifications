@@ -1,6 +1,6 @@
 using System;
 using System.Net.Http;
-using System.Text.Json;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Nogic.Teams.Notifications.Entities;
 
@@ -20,11 +20,7 @@ namespace Nogic.Teams.Notifications
 
         public async ValueTask PostMessageAsync(MessageCard message)
         {
-            byte[] utf8json = JsonSerializer.SerializeToUtf8Bytes(message);
-            var content = new ByteArrayContent(utf8json);
-            content.Headers.ContentType = new("application/json");
-
-            var response = await _client.PostAsync(_uri, content).ConfigureAwait(false);
+            var response = await _client.PostAsJsonAsync(_uri, message);
             response.EnsureSuccessStatusCode();
         }
 

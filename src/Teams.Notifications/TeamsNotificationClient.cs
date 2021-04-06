@@ -2,9 +2,9 @@ using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Teams.Notifications.Entities;
+using Nogic.Teams.Notifications.Entities;
 
-namespace Teams.Notifications
+namespace Nogic.Teams.Notifications
 {
     public class TeamsNotificationClient : IDisposable
     {

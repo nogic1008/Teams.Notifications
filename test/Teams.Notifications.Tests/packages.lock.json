@@ -1115,7 +1115,7 @@
           "xunit.extensibility.core": "[2.4.1]"
         }
       },
-      "teams.notifications": {
+      "nogic.teams.notifications": {
         "type": "Project",
         "dependencies": {
           "System.Text.Json": "5.0.1"

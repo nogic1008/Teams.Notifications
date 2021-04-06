@@ -2,12 +2,11 @@ using System.Text.Json.Serialization;
 
 namespace Teams.Notifications.Entities
 {
-    public class PotentialActionLink
+    public record OpenApiTarget(
+        [property: JsonPropertyName("os")] string OS,
+        [property: JsonPropertyName("uri")] string Uri
+    )
     {
-        [JsonPropertyName("os")]
-        public string Type { get; set; } = "default";
-
-        [JsonPropertyName("uri")]
-        public string? Value { get; set; }
+        public OpenApiTarget(string uri) : this("default", uri) { }
     }
 }

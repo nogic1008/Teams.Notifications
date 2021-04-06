@@ -3,27 +3,18 @@ using System.Text.Json.Serialization;
 
 namespace Teams.Notifications.Entities
 {
-    public class MessageCard
+    public record MessageCard(
+        [property: JsonPropertyName("title")] string? Title,
+        [property: JsonPropertyName("text")] string? Text,
+        [property: JsonPropertyName("themeColor")] string? ThemeColor,
+        [property: JsonPropertyName("sections")] IList<MessageSection>? Sections,
+        [property: JsonPropertyName("potentialAction")] IList<OpenApiAction>? PotentialActions
+    )
     {
         [JsonPropertyName("@type")]
-        public string Type { get; } = "MessageCard";
+        public string Type => "MessageCard";
 
         [JsonPropertyName("@context")]
-        public string Context { get; } = "http://schema.org/extensions";
-
-        [JsonPropertyName("title")]
-        public string? Title { get; set; }
-
-        [JsonPropertyName("text")]
-        public string? Text { get; set; }
-
-        [JsonPropertyName("themeColor")]
-        public string? Color { get; set; }
-
-        [JsonPropertyName("sections")]
-        public IList<MessageSection>? Sections { get; set; }
-
-        [JsonPropertyName("potentialAction")]
-        public IList<PotentialAction>? PotentialActions { get; set; }
+        public string Context => "http://schema.org/extensions";
     }
 }

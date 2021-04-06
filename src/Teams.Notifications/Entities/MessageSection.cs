@@ -3,12 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace Teams.Notifications.Entities
 {
-    public class MessageSection
-    {
-        [JsonPropertyName("title")]
-        public string? Title { get; set; }
-
-        [JsonPropertyName("facts")]
-        public IList<MessageFact>? Facts { get; set; }
-    }
+    public record MessageSection(
+        [property: JsonPropertyName("title")] string? Title = null,
+        [property: JsonPropertyName("facts")] IList<MessageFact>? Facts = null
+    );
 }

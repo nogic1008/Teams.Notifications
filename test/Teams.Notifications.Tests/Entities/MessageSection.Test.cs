@@ -21,7 +21,10 @@ namespace Nogic.Teams.Notifications.Tests.Entities
                 new MessageFact("Key1", "Value1"),
                 new MessageFact("Key2", "Value2"),
             };
-            var sut = new MessageSection(title, facts);
+            var sut = new MessageSection(
+                Title: title,
+                Facts: facts
+            );
 
             // Act
             string json = JsonSerializer.Serialize(sut, JsonConfig.Default);
@@ -38,11 +41,20 @@ namespace Nogic.Teams.Notifications.Tests.Entities
         public static object[][] TestData => new[]
         {
             new object[] { "{}", new MessageSection() },
-            new object[] { "{\"title\":\"Empty\",\"facts\":[]}", new MessageSection("Empty", Array.Empty<MessageFact>()) },
-            new object[] { "{\"title\":\"Multiple\",\"facts\":["
+            new object[]
+            {
+                "{\"title\":\"Empty\",\"facts\":[]}",
+                new MessageSection(Title: "Empty", Facts: Array.Empty<MessageFact>())
+            },
+            new object[]
+            {
+                "{\"title\":\"Multiple\",\"facts\":["
                 + "{\"name\":\"Name1\",\"value\":\"Value1\"},"
                 + "{\"name\":\"Name2\",\"value\":\"Value2\"}]}",
-                new MessageSection("Multiple", new MessageFact[] { new("Name1", "Value1"), new("Name2", "Value2") })
+                new MessageSection(
+                    Title: "Multiple",
+                    Facts: new MessageFact[] { new("Name1", "Value1"), new("Name2", "Value2") }
+                )
             },
         };
         [Theory]

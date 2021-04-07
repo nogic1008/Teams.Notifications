@@ -5,6 +5,7 @@ namespace Nogic.Teams.Notifications.Entities
 {
     /// <summary>
     /// Opens a URI in a separate browser or app.
+    /// https://docs.microsoft.com/outlook/actionable-messages/message-card-reference#openuri-action
     /// <para>
     /// Although links can be achieved through Markdown, <see cref="OpenUriAction"/> has the advantage of allowing you to specify different URIs for different operating systems, which makes it possible to open the link in an app on mobile devices.
     /// Consider using <see cref="OpenUriAction"/> rather than a link in Markdown if there is a clear advantage for your users in their ability to open the link in an app on their mobile device.

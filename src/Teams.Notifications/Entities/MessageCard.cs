@@ -5,7 +5,7 @@ namespace Nogic.Teams.Notifications.Entities
 {
     /// <summary>
     /// Entity class for Microsoft Teams message.
-    /// https://docs.microsoft.com/en-us/outlook/actionable-messages/message-card-reference#card-fields
+    /// https://docs.microsoft.com/outlook/actionable-messages/message-card-reference#card-fields
     /// </summary>
     public record MessageCard(
         /// <summary>

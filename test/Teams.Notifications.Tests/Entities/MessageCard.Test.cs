@@ -18,13 +18,15 @@ namespace Nogic.Teams.Notifications.Tests.Entities
         public void CanSerializeJSON()
         {
             // Arrange
+            const string summary = "Summary";
             const string title = "Title";
             const string text = "Text";
             const string color = "FF0000";
             var sut = new MessageCard(
+                Summary: summary,
+                ThemeColor: color,
                 Title: title,
                 Text: text,
-                ThemeColor: color,
                 Sections: Array.Empty<MessageSection>()
             );
 
@@ -34,6 +36,7 @@ namespace Nogic.Teams.Notifications.Tests.Entities
             // Assert
             json.Should().Contain(Type)
                 .And.Contain(Context)
+                .And.Contain("\"summary\":\"" + summary + "\"")
                 .And.Contain("\"title\":\"" + title + "\"")
                 .And.Contain("\"text\":\"" + text + "\"")
                 .And.Contain("\"themeColor\":\"" + color + "\"")
@@ -52,13 +55,14 @@ namespace Nogic.Teams.Notifications.Tests.Entities
             },
             new object[]
             {
-                "{" + Type + "," + Context + ",\"title\":\"Empty Array\","
+                "{" + Type + "," + Context + ",\"summary\":\"Array is Empty\",\"title\":\"Empty Array\","
                 + "\"text\":\"Message Body\",\"themeColor\":\"FF0000\","
                 + "\"sections\":[],\"potentialAction\":[]}",
                 new MessageCard(
+                    Summary: "Array is Empty",
+                    ThemeColor: "FF0000",
                     Title: "Empty Array",
                     Text: "Message Body",
-                    ThemeColor: "FF0000",
                     Sections: Array.Empty<MessageSection>(),
                     PotentialActions: Array.Empty<OpenUriAction>()
                 ),

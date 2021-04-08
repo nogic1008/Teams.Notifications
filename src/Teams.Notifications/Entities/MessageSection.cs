@@ -89,6 +89,10 @@ namespace Nogic.Teams.Notifications.Entities
         /// </summary>
         [property: JsonPropertyName("heroImage")] SectionImage? HeroImage = null,
         /// <summary>
+        /// This is very similar to <see cref="MessageCard.Text"/>. It can be used for the same purpose.
+        /// </summary>
+        [property: JsonPropertyName("text")] string? Text = null,
+        /// <summary>
         /// They are a very important component of a section.
         /// They often contain the information that really matters to the user.
         /// <para>
@@ -118,7 +122,8 @@ namespace Nogic.Teams.Notifications.Entities
         /// <seealso cref="OpenUriAction"/>
         /// </summary>
         [property: JsonPropertyName("potentialAction")] IList<OpenUriAction>? PotentialActions = null
-    ) { }
+    )
+    { }
 
     /// <summary>
     /// Defines an image as used by <see cref="MessageSection.HeroImage"/> and <see cref="MessageSection.Images"/>.
@@ -134,7 +139,8 @@ namespace Nogic.Teams.Notifications.Entities
         /// Typically, it is displayed in a tooltip as the user hovers their mouse over the image.
         /// </summary>
         [property: JsonPropertyName("title")] string Title
-    ) { }
+    )
+    { }
 
     /// <summary>
     /// Contains the information that really matters to the user.
@@ -142,5 +148,6 @@ namespace Nogic.Teams.Notifications.Entities
     public record MessageFact(
         [property: JsonPropertyName("name")] string Name,
         [property: JsonPropertyName("value")] string Value
-    ) { }
+    )
+    { }
 }

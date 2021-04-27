@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -70,5 +71,56 @@ namespace Nogic.Teams.Notifications.Entities
 
         [JsonPropertyName("@context")]
         public string Context => "http://schema.org/extensions";
+
+        /// <summary>
+        /// Generates a <see cref="MessageCard"/> that includes only <see cref="Title"/> and <see cref="Text"/> .
+        /// </summary>
+        /// <param name="title">Message title</param>
+        /// <param name="text">Message description</param>
+        public static MessageCard CreateSimpleCard(string title, string text)
+            => new(Title: title, Text: text);
+
+        /// <summary>
+        /// Generates a <see cref="MessageCard"/> from exception object.
+        /// </summary>
+        /// <param name="exception">Exception source</param>
+        /// <param name="title">Message title</param>
+        public static MessageCard CreateErrorMessageCard(Exception exception, string title = "Error")
+        {
+            var sections = new List<MessageSection>()
+            {
+                CreateSection(exception) with { StartGroup = null }
+            };
+
+            var innerEx = exception.InnerException;
+            while (innerEx is not null)
+            {
+                sections.Add(CreateSection(innerEx));
+                innerEx = innerEx.InnerException;
+            }
+            string text = $"**{exception.GetType().Name}** is thrown at {DateTimeOffset.Now}.";
+
+            return new MessageCard(
+                Title: title,
+                Summary: text,
+                Text: text,
+                ThemeColor: "ff0000",
+                Sections: sections
+            );
+
+            static MessageSection CreateSection(Exception exception)
+                => new(
+                    Title: exception.GetType().Name,
+                    Text: exception.Message,
+                    StartGroup: true,
+                    Facts: new MessageFact[]
+                    {
+                        new (nameof(exception.HelpLink) + ":", exception.HelpLink ?? ""),
+                        new (nameof(exception.Source) + ":", exception.Source ?? ""),
+                        new (nameof(exception.TargetSite) + ":", exception.TargetSite.ToString()),
+                        new (nameof(exception.StackTrace) + ":", exception.StackTrace ?? "")
+                    }
+                );
+        }
     }
 }

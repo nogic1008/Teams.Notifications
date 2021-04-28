@@ -100,5 +100,50 @@ namespace Nogic.Teams.Notifications.Tests.Entities
                     .And.ContainInOrder(expected.PotentialActions);
             }
         }
+
+        [Fact]
+        public void CreateSimpleCard_Returns_MessageCard()
+        {
+            // Arrange - Act
+            var sut = MessageCard.CreateSimpleCard("Title", "Text");
+
+            // Assert
+            sut.Should().Be(new MessageCard(Title: "Title", Text: "Text"));
+        }
+
+        [Fact]
+        public void CreateErrorMessageCard_Returns_MessageCard()
+        {
+            // Arrange
+            var exception = CauseNestedException();
+
+            // Act
+            var sut = MessageCard.CreateErrorMessageCard(exception, "Err", new(2021, 1, 1, 0, 0, 0, TimeSpan.Zero));
+
+            // Assert
+            const string expectedText = "**ApplicationException** is thrown at 2021/01/01 0:00:00 +00:00.";
+            sut.Summary.Should().Be(expectedText);
+            sut.ThemeColor.Should().Be("ff0000");
+            sut.Title.Should().Be("Err");
+            sut.Text.Should().Be(expectedText);
+            sut.Sections.Should().HaveCount(2);
+            sut.Sections![0].Text.Should().Be("Application Error!");
+            sut.Sections[1].Title.Should().Be(nameof(DivideByZeroException));
+            sut.PotentialActions.Should().BeNull();
+
+            static Exception CauseNestedException()
+            {
+                try
+                {
+                    int zero = 0;
+                    int err = 100 / zero;
+                }
+                catch (DivideByZeroException ex)
+                {
+                    return new ApplicationException("Application Error!", ex);
+                }
+                return new Exception();
+            }
+        }
     }
 }

@@ -85,8 +85,10 @@ namespace Nogic.Teams.Notifications.Entities
         /// </summary>
         /// <param name="exception">Exception source</param>
         /// <param name="title">Message title</param>
-        public static MessageCard CreateErrorMessageCard(Exception exception, string title = "Error")
+        /// <param name="loggedDate">Logged Date (default to DateTimeOffset.Now)</param>
+        public static MessageCard CreateErrorMessageCard(Exception exception, string title = "Error", DateTimeOffset? loggedDate = null)
         {
+            var currentdate = loggedDate ?? DateTimeOffset.Now;
             var sections = new List<MessageSection>()
             {
                 CreateSection(exception) with { StartGroup = null }
@@ -98,7 +100,7 @@ namespace Nogic.Teams.Notifications.Entities
                 sections.Add(CreateSection(innerEx));
                 innerEx = innerEx.InnerException;
             }
-            string text = $"**{exception.GetType().Name}** is thrown at {DateTimeOffset.Now}.";
+            string text = $"**{exception.GetType().Name}** is thrown at {currentdate}.";
 
             return new MessageCard(
                 Title: title,
@@ -117,7 +119,7 @@ namespace Nogic.Teams.Notifications.Entities
                     {
                         new (nameof(exception.HelpLink) + ":", exception.HelpLink ?? ""),
                         new (nameof(exception.Source) + ":", exception.Source ?? ""),
-                        new (nameof(exception.TargetSite) + ":", exception.TargetSite.ToString()),
+                        new (nameof(exception.TargetSite) + ":", exception.TargetSite?.ToString() ?? ""),
                         new (nameof(exception.StackTrace) + ":", exception.StackTrace ?? "")
                     }
                 );

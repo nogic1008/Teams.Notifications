@@ -138,11 +138,13 @@ public class MessageCardTest
     }
 
     [Theory]
+    [InlineData("1", "The JSON value could not be converted to*")]
     [InlineData("{}", "\"@type\" property is required.")]
     [InlineData("{\"@type\":\"MessageCard\"}", "\"@context\" property is required.")]
     [InlineData("{\"@context\":\"http://schema.org/extensions\"}", "\"@type\" property is required.")]
     [InlineData("{\"@type\":\"Message\",\"@context\":\"http://schema.org/extensions\"}", "expected \"MessageCard\", but \"Message\".")]
     [InlineData("{\"@type\":\"MessageCard\",\"@context\":\"foo\"}", "expected \"http://schema.org/extensions\", but \"foo\".")]
+    [InlineData("{\"@type\":\"MessageCard\",\"@context\":\"http://schema.org/extensions\",\"foo\":\"bar\"}", "Unknown property: foo")]
     public void CannotDeserializeInvalidJson(string json, string errorMessage)
     {
         var deserialize = () => _ = JsonSerializer.Deserialize<MessageCard>(json);

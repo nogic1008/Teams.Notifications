@@ -175,29 +175,30 @@ public record MessageCard(
                 or JsonIgnoreCondition.WhenWritingNull;
 
             writer.WriteStartObject();
-
             writer.WriteString(TypePropertyName, TypeValue);
             writer.WriteString(ContextPropertyName, ContextValue);
-            if (!ignoreNull || value.Summary is not null)
-                writer.WriteString(SummaryPropertyName, value.Summary);
-            if (!ignoreNull || value.ThemeColor is not null)
-                writer.WriteString(ThemeColorPropertyName, value.ThemeColor);
-            if (!ignoreNull || value.Title is not null)
-                writer.WriteString(TitlePropertyName, value.Title);
-            if (!ignoreNull || value.Text is not null)
-                writer.WriteString(TextPropertyName, value.Text);
-            if (!ignoreNull || value.Sections is not null)
+            WriteNullableString(SummaryPropertyName, value.Summary);
+            WriteNullableString(ThemeColorPropertyName, value.ThemeColor);
+            WriteNullableString(TitlePropertyName, value.Title);
+            WriteNullableString(TextPropertyName, value.Text);
+            WriteNullableObject(SectionsPropertyName, value.Sections);
+            WriteNullableObject(PotentialActionsPropertyName, value.PotentialActions);
+            writer.WriteEndObject();
+
+            void WriteNullableString(string propertyName, string? value)
             {
-                writer.WritePropertyName(SectionsPropertyName);
-                JsonSerializer.Serialize(writer, value.Sections, options);
-            }
-            if (!ignoreNull || value.PotentialActions is not null)
-            {
-                writer.WritePropertyName(PotentialActionsPropertyName);
-                JsonSerializer.Serialize(writer, value.PotentialActions, options);
+                if (!ignoreNull || value is not null)
+                    writer.WriteString(propertyName, value);
             }
 
-            writer.WriteEndObject();
+            void WriteNullableObject<T>(string propertyName, T value)
+            {
+                if (!ignoreNull || value is not null)
+                {
+                    writer.WritePropertyName(propertyName);
+                    JsonSerializer.Serialize(writer, value, options);
+                }
+            }
         }
     }
 }

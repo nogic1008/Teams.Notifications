@@ -28,7 +28,8 @@ public class TeamsPostServiceTest
 
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
-        handler.VerifyRequest(async req => {
+        handler.VerifyRequest(async req =>
+        {
             // URI
             req.RequestUri.Should().Be(uri);
 

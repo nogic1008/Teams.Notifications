@@ -1,7 +1,7 @@
 using ConsoleAppFramework;
-using Nogic.Teams.Notifications.Entities;
 using Microsoft.Extensions.Logging;
 using Nogic.Teams.Notifications;
+using Nogic.Teams.Notifications.Entities;
 
 namespace ConsoleAppSample;
 

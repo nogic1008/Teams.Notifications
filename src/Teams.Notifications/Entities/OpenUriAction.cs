@@ -17,16 +17,23 @@ namespace Nogic.Teams.Notifications.Entities;
 /// Note: Microsoft Teams only support HTTP/HTTPS URLs in <see cref="OpenUriTarget.Uri"/>
 /// </para>
 /// </remarks>
+/// <param name="Name">
+/// Defines the text that will be displayed on screen for the action.
+/// <para>
+/// <list type="bullet">
+///   <item>
+///     DO use verbs. For instance, use "Set due date" instead of "Due date" or "Add note" instead of "Note."
+///     In some cases, the noun itself just works because it is also a verb: "Comment"
+///   </item>
+///   <item>
+///     DO NOT name an OpenUri action in such a way that it suggests the action can be taken right from the client.
+///     Instead, name the action "View in [name of site/app]" or "Open in [name of site/app]"
+///   </item>
+/// </list>
+/// </para>
+/// </param>
+/// <param name="Targets">Name/value pairs that defines one URI per target operating system.</param>
 public record OpenUriAction(
-    /// <summary>
-    /// Defines the text that will be displayed on screen for the action.
-    /// </summary>
-    /// <remarks>
-    /// **Do** use verbs. For instance, use "Set due date" instead of "Due date" or "Add note" instead of "Note."
-    /// In some cases, the noun itself just works because it is also a verb: "Comment"
-    /// **Don't** name an OpenUri action in such a way that it suggests the action can be taken right from the client.
-    /// Instead, name the action "View in <name of site/app>" or "Open in <name of site/app>"
-    /// </remarks>
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("targets")] IList<OpenUriTarget> Targets
 )
@@ -35,15 +42,14 @@ public record OpenUriAction(
     public string Type => "OpenUri";
 }
 
-/// <summary>
-/// Name/value pairs that defines one URI per target operating system.
-/// </summary>
+/// <summary><inheritdoc cref="OpenUriAction" path="/param[@name='Targets']"/></summary>
+/// <param name="Uri">URI</param>
+/// <param name="OS">
+/// Target operating system.
+/// Supported values are <c>"default"</c>, <c>"windows"</c>, <c>"iOS"</c> and <c>"android"</c>.
+/// The <c>"default"</c> operating system will in most cases simply open the URI in a web browser, regardless of the actual operating system.
+/// </param>
 public record OpenUriTarget(
     [property: JsonPropertyName("uri")] string Uri,
-    /// <summary>
-    /// Target operating system.
-    /// Supported values are <c>"default"</c>, <c>"windows"</c>, <c>"iOS"</c> and <c>"android"</c>.
-    /// The <c>"default"</c> operating system will in most cases simply open the URI in a web browser, regardless of the actual operating system.
-    /// </summary>
     [property: JsonPropertyName("os")] string OS = "default"
 );

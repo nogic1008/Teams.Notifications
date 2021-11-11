@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -21,6 +21,11 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/Teams.Notifications/Nogic.Teams.Notifications.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="FluentAssertions" />
+    <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>

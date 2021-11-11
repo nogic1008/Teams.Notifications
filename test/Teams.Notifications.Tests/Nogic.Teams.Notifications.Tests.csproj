@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="Moq" />
     <Using Include="FluentAssertions" />
     <Using Include="Xunit" />
   </ItemGroup>

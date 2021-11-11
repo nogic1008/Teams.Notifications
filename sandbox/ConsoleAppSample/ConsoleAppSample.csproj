@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Teams.Notifications/Nogic.Teams.Notifications.csproj" />
+    <ProjectReference Include="../../src/Teams.Notifications/Nogic.Teams.Notifications.csproj" />
   </ItemGroup>
 
 </Project>

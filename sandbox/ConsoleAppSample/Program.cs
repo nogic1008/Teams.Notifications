@@ -2,7 +2,7 @@ using ConsoleAppFramework;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nogic.Teams.Notifications;
-using Nogic.Teams.Notifications.Client;
+using ConsoleAppSample;
 
 await Host.CreateDefaultBuilder()
     .ConfigureLogging(logging => logging.ReplaceToSimpleConsole())

@@ -95,8 +95,6 @@ public record MessageCard(
         /// <inheritdoc/>
         public override MessageCard? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType == JsonTokenType.Null)
-                return null;
             if (reader.TokenType != JsonTokenType.StartObject)
                 throw new JsonException();
 
@@ -111,9 +109,6 @@ public record MessageCard(
 
             while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
             {
-                if (reader.TokenType != JsonTokenType.PropertyName)
-                    throw new JsonException();
-
                 string propertyName = reader.GetString()!;
                 switch (propertyName)
                 {

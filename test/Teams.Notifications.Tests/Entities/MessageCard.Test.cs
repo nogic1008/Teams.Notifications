@@ -138,7 +138,8 @@ public class MessageCardTest
     }
 
     [Theory]
-    [InlineData("1", "The JSON value could not be converted to*")]
+    [InlineData("1", "*")]
+    [InlineData("{1}", "*")]
     [InlineData("{}", "\"@type\" property is required.")]
     [InlineData("{\"@type\":\"MessageCard\"}", "\"@context\" property is required.")]
     [InlineData("{\"@context\":\"http://schema.org/extensions\"}", "\"@type\" property is required.")]

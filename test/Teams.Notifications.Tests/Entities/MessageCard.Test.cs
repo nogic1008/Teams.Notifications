@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Nogic.Teams.Notifications.Entities;
 
 namespace Nogic.Teams.Notifications.Tests.Entities;
@@ -8,93 +9,145 @@ namespace Nogic.Teams.Notifications.Tests.Entities;
 /// </summary>
 public class MessageCardTest
 {
-    private const string Type = "\"@type\":\"MessageCard\"";
-    private const string Context = "\"@context\":\"http://schema.org/extensions\"";
-
-    [Fact]
-    public void CanSerializeJSON()
+    /// <summary>Test data for <see cref="CanSerializeJson"/></summary>
+    public static object?[][] TestDataForSerialize => new[]
     {
-        // Arrange
-        const string summary = "Summary";
-        const string title = "Title";
-        const string text = "Text";
-        const string color = "FF0000";
-        var sut = new MessageCard(
-            Summary: summary,
-            ThemeColor: color,
-            Title: title,
-            Text: text,
-            Sections: Array.Empty<MessageSection>()
-        );
-
-        // Act
-        string json = JsonSerializer.Serialize(sut, JsonConfig.Default);
+        new object?[]
+        {
+            null,
+            JsonIgnoreCondition.Never,
+            "null"
+        },
+        new object[]
+        {
+            new MessageCard(
+                "Summary",
+                "FF0000",
+                "Title",
+                "Text",
+                Array.Empty<MessageSection>(),
+                Array.Empty<OpenUriAction>()
+            ),
+            JsonIgnoreCondition.WhenWritingNull,
+            "{"
+            + "\"@type\":\"MessageCard\","
+            + "\"@context\":\"http://schema.org/extensions\","
+            + "\"summary\":\"Summary\","
+            + "\"themeColor\":\"FF0000\","
+            + "\"title\":\"Title\","
+            + "\"text\":\"Text\","
+            + "\"sections\":[],"
+            + "\"potentialAction\":[]"
+            + "}"
+        },
+        new object[]
+        {
+            new MessageCard(),
+            JsonIgnoreCondition.Never,
+            "{"
+            + "\"@type\":\"MessageCard\","
+            + "\"@context\":\"http://schema.org/extensions\","
+            + "\"summary\":null,"
+            + "\"themeColor\":null,"
+            + "\"title\":null,"
+            + "\"text\":null,"
+            + "\"sections\":null,"
+            + "\"potentialAction\":null"
+            + "}"
+        },
+        new object[]
+        {
+            new MessageCard(),
+            JsonIgnoreCondition.WhenWritingNull,
+            "{"
+            + "\"@type\":\"MessageCard\","
+            + "\"@context\":\"http://schema.org/extensions\""
+            + "}"
+        },
+    };
+    [Theory]
+    [MemberData(nameof(TestDataForSerialize))]
+    public void CanSerializeJSON(MessageCard? card, JsonIgnoreCondition ignoreCondition, string expectedJson)
+    {
+        // Arrange - Act
+        string json = JsonSerializer.Serialize(card, new JsonSerializerOptions(JsonConfig.Default)
+        {
+            DefaultIgnoreCondition = ignoreCondition,
+        });
 
         // Assert
-        json.Should().Contain(Type)
-            .And.Contain(Context)
-            .And.Contain("\"summary\":\"" + summary + "\"")
-            .And.Contain("\"title\":\"" + title + "\"")
-            .And.Contain("\"text\":\"" + text + "\"")
-            .And.Contain("\"themeColor\":\"" + color + "\"")
-            .And.Contain("\"sections\":[]")
-            .And.NotContain("\"potentialActions\":");
+        json.Should().Be(expectedJson);
     }
 
     /// <summary>
-    /// Test data for <see cref="CanDeserializeJson(string, MessageCard)"/>
+    /// Test data for <see cref="CanDeserializeJson"/>
     /// </summary>
-    public static object[][] TestData => new[] {
+    public static object?[][] TestDataForDeserialize => new[]
+    {
+        new object?[]{ "null", null },
         new object[]
         {
-            "{" + Type + "," + Context + ",\"title\":\"Simple Message\",\"text\":\"Message Body\"}",
+            "{"
+            + "\"@type\":\"MessageCard\","
+            + "\"@context\":\"http://schema.org/extensions\","
+            + "\"title\":\"Simple Message\","
+            + "\"text\":\"Message Body\""
+            + "}",
             new MessageCard(Title: "Simple Message", Text: "Message Body"),
         },
         new object[]
         {
-            "{" + Type + "," + Context + ",\"summary\":\"Array is Empty\",\"title\":\"Empty Array\","
-            + "\"text\":\"Message Body\",\"themeColor\":\"FF0000\","
-            + "\"sections\":[],\"potentialAction\":[]}",
+            "{"
+            + "\"@type\":\"MessageCard\","
+            + "\"@context\":\"http://schema.org/extensions\","
+            + "\"summary\":\"Array is Empty\","
+            + "\"title\":\"Empty Array\","
+            + "\"themeColor\":\"FF0000\","
+            + "\"text\":\"Message Body\","
+            + "\"sections\":[],"
+            + "\"potentialAction\":[]"
+            + "}",
             new MessageCard(
-                Summary: "Array is Empty",
-                ThemeColor: "FF0000",
-                Title: "Empty Array",
-                Text: "Message Body",
-                Sections: Array.Empty<MessageSection>(),
-                PotentialActions: Array.Empty<OpenUriAction>()
+                "Array is Empty",
+                "FF0000",
+                "Empty Array",
+                "Message Body",
+                Array.Empty<MessageSection>(),
+                Array.Empty<OpenUriAction>()
             ),
         },
     };
     [Theory]
-    [MemberData(nameof(TestData))]
-    public void CanDeserializeJson(string json, MessageCard expected)
+    [MemberData(nameof(TestDataForDeserialize))]
+    public void CanDeserializeJson(string json, MessageCard? expected)
     {
         // Arrange - Act
         var card = JsonSerializer.Deserialize<MessageCard>(json);
 
         // Assert
+        if (expected is null)
+        {
+            card.Should().BeNull();
+            return;
+        }
         card!.Title.Should().Be(expected.Title);
         card.Text.Should().Be(expected.Text);
         card.ThemeColor.Should().Be(expected.ThemeColor);
+        card.Sections.Should().Equal(expected.Sections);
+        card.PotentialActions.Should().Equal(expected.PotentialActions);
+    }
 
-        if (expected.Sections is null)
-        {
-            card.Sections.Should().BeNull();
-        }
-        else
-        {
-            card.Sections.Should().HaveCount(expected.Sections.Count)
-                .And.ContainInOrder(expected.Sections);
-        }
-
-        if (expected.PotentialActions is null)
-        {
-            card.PotentialActions.Should().BeNull();
-        }
-        else
-        {
-            card.PotentialActions.Should().HaveCount(expected.PotentialActions.Count)
-                .And.ContainInOrder(expected.PotentialActions);
-        }
+    [Theory]
+    [InlineData("1", "*")]
+    [InlineData("{}", "\"@type\" property is required.")]
+    [InlineData("{\"@type\":\"MessageCard\"}", "\"@context\" property is required.")]
+    [InlineData("{\"@context\":\"http://schema.org/extensions\"}", "\"@type\" property is required.")]
+    [InlineData("{\"@type\":\"Message\",\"@context\":\"http://schema.org/extensions\"}", "expected \"MessageCard\", but \"Message\".")]
+    [InlineData("{\"@type\":\"MessageCard\",\"@context\":\"foo\"}", "expected \"http://schema.org/extensions\", but \"foo\".")]
+    [InlineData("{\"@type\":\"MessageCard\",\"@context\":\"http://schema.org/extensions\",\"foo\":\"bar\"}", "Unknown property: foo")]
+    public void CannotDeserializeInvalidJson(string json, string errorMessage)
+    {
+        var deserialize = () => _ = JsonSerializer.Deserialize<MessageCard>(json);
+        deserialize.Should().ThrowExactly<JsonException>().WithMessage(errorMessage);
     }
 }

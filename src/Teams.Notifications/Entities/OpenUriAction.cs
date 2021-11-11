@@ -43,6 +43,7 @@ public record OpenUriAction(
 }
 
 /// <summary><inheritdoc cref="OpenUriAction" path="/param[@name='Targets']"/></summary>
+/// <param name="Uri">URI</param>
 /// <param name="OS">
 /// Target operating system.
 /// Supported values are <c>"default"</c>, <c>"windows"</c>, <c>"iOS"</c> and <c>"android"</c>.

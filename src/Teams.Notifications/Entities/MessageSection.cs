@@ -175,8 +175,6 @@ public record MessageSection(
 /// </param>
 public record SectionImage(
     [property: JsonPropertyName("image")] string Image,
-    /// <summary>
-    /// </summary>
     [property: JsonPropertyName("title")] string Title
 );
 

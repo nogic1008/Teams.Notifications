@@ -77,10 +77,6 @@ public record MessageCard(
     IReadOnlyList<OpenUriAction>? PotentialActions = null
 )
 {
-    public string Type => "MessageCard";
-
-    public string Context => "http://schema.org/extensions";
-
     private class MessageCardJsonConverter : JsonConverter<MessageCard>
     {
         #region const
